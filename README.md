@@ -41,9 +41,6 @@ Non-matrix parameters (embeddings, biases, LM head) are updated with AdamW.
 
 ---
 
-## Setup
----
-
 ## Data Preparation
 
 Data is pre-tokenized and saved as binary shards before training. Supported datasets:
@@ -58,11 +55,13 @@ Data is pre-tokenized and saved as binary shards before training. Supported data
 **Step 1: Tokenize and save shards**
 
 ```bash
-# For LLaMA models (Llama-2 tokenizer)
-python process_data.py --name fineweb100B --tokenizer llama2 --shard_size 100000000
 
 # For GPT models (GPT-2 tokenizer)
 python process_data.py --name fineweb10B --tokenizer gpt2 --shard_size 100000000
+
+# For LLaMA models (Llama-2 tokenizer)
+python process_data.py --name fineweb100B --tokenizer llama2 --shard_size 100000000
+
 ```
 
 Arguments:
@@ -86,12 +85,12 @@ The dataloader expects:
 Edit the `logging_params` in your config to point `ckpt_dir` and `results_dir` to your output directories, then launch with `torchrun`:
 
 ```bash
-# Single node, 2 GPUs
+# Single node, 2 GPUs, without normalization
 CUDA_VISIBLE_DEVICES=0,1 torchrun --standalone --nproc_per_node=2 \
-    run.py --config configs/llama60M_none.yaml --prefix my_run
+    run.py --config configs/gpt_small_none.yaml --prefix my_run
 
-# Single GPU
-python run.py --config configs/llama60M_none.yaml --prefix my_run
+# Single GPU, with col_row normalization
+python run.py --config configs/gpt_small_col_row.yaml --prefix my_run
 ```
 
 `--prefix` and `--suffix` are prepended/appended to the W&B run name.
