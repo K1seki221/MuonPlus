@@ -1,6 +1,6 @@
 # MuonPlus
 
-**MuonPlus** extends the [Muon optimizer](https://github.com/KellerJordan/Muon) by adding optional post-polar normalization to the update matrix. After polar factorization, each weight update can be column-wise, row-wise, or jointly normalized — potentially improving training stability across weight matrices of different aspect ratios.
+**MuonPlus** extends the [Muon optimizer](https://github.com/KellerJordan/Muon) by adding optional post-polar normalization to the update matrix. After polar factorization, each weight update can be column-wise, row-wise, or jointly normalized.
 
 ## Method
 
@@ -38,6 +38,46 @@ u = normalize(u, mode)   # new
 | `polarexpress` | [PolarExpress](https://arxiv.org/abs/2505.16932) |
 
 Non-matrix parameters (embeddings, biases, LM head) are updated with AdamW.
+
+---
+
+## Results
+
+### Consistent gains across scales and architectures
+
+Muon+ consistently outperforms Muon on both GPT (124M–774M) and LLaMA (60M–1B) models under compute-optimal training (T2P ≈ 20).
+
+![Muon vs Muon+ validation PPL](fig/muonp_comparison.png)
+
+| Model | Muon PPL | Muon+ PPL | Δ |
+|---|---|---|---|
+| GPT-Small (124M) | 29.66 | **27.64** | −2.02 |
+| GPT-Base (362M) | 21.70 | **19.98** | −1.72 |
+| GPT-Large (774M) | 17.82 | **16.91** | −0.91 |
+| LLaMA-130M | 19.06 | **18.65** | −0.41 |
+| LLaMA-350M | 14.02 | **13.41** | −0.61 |
+| LLaMA-1B | 10.68 | **10.31** | −0.37 |
+
+### Robustness to learning rate
+
+Muon+ variants (col, row, col\_row, row\_col) consistently beat the Muon baseline across all learning rates. Notably, at large learning rates where Muon degrades sharply, Muon+ remains stable.
+
+<p align="center">
+  <img src="fig/llama_130m_ppl_sweep.png" width="48%"/>
+  <img src="fig/llama_350m_ppl_sweep.png" width="48%"/>
+</p>
+
+### Sustained gains in long-horizon overtraining (T2P ≈ 200)
+
+Muon+ maintains its advantage throughout 72B token overtraining runs on both GPT-Base and LLaMA-350M, with the performance gap stable across early, mid, and late training stages.
+
+| Model | Tokens | Muon PPL | Muon+ PPL | Δ |
+|---|---|---|---|---|
+| GPT-Base (362M) | 72B | 16.97 | **15.84** | −1.13 |
+| LLaMA-350M (368M) | 72B | 11.48 | **11.03** | −0.45 |
+
+![Overtraining GPT-Base](fig/gpt_base_overtrain_loss_panels.png)
+![Overtraining LLaMA-350M](fig/llama350m_overtrain_loss_panels.png)
 
 ---
 
