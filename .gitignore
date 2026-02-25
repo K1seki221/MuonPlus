@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Outputs (checkpoints, results, wandb logs)
+outputs/
+
+# Data
+*.bin
+*.npy
+*.npz
+
+# Torch checkpoints
+*.pt
+*.pth

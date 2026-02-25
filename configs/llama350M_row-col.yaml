@@ -1,0 +1,61 @@
+# LLaMA 350M - muon-plus, cosine lr schedule
+optimizer_params:
+  - name: muon-plus
+    lr: [0.1]
+    weight_decay: 0.1
+    lr_schedule: warm-up-cosine
+    warm_up_fraction: 0.1
+    ns_steps: 5
+    polar_method: Keller
+    rms_scaling: True
+    # Split heads
+    split_heads: False
+    nheads: 16
+    # Post-polar normalization
+    # Options: none | col | row | col_row | row_col
+    norm_mode: row_col
+    norm_eps: 1.0e-8
+
+training_params:
+  tokens_processed: 2097152 #4194304 #4194304 # 2^18  # 524288 # 2^19
+  val_tokens_processed: 8388608 #2^23
+  batch_size: 4 # Could try also 64?
+  num_epochs: 1
+  context_length: 4096
+  gradnorm: 1.0
+  tensorcore_precision: high   #Can be highest, high, or medium
+  autocast: True
+  mixed_precision: bfloat16
+  compile: True
+
+  
+logging_params:
+  val_tokens_processed: 8388608 # 2^23
+  log_step: 50
+  val_step: 500
+  save_ckpt_step: 500
+  load_ckpt_step: 0
+  keep_last: 2
+  ckpt_dir: "outputs/checkpoints"
+  results_dir: "outputs/results"
+  wandb:
+    project: "MuonPlus"
+    dir: "outputs/wandb"
+
+
+# LLaMA 350M: ~350M params
+# hidden_size=1024, n_layer=24, n_head=16, intermediate_size=2736
+model_config:
+  model_type: llama
+  n_embd: 1024
+  n_layer: 24
+  n_head: 16
+  vocab_size: 32000
+  intermediate_size: 2736
+  rope_theta: 10000.0
+  flash_attention: True
+
+dataset:
+  name: "fineweb100B"
+  tokenizer: "Llama-2-7b-hf"
+  total_tokens_B: 6.4
