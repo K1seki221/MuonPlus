@@ -35,7 +35,7 @@ u = normalize(u, mode)   # new
 | `Keller` | Newton-Schulz iteration (fixed coefficients, original Muon) |
 | `Jiacheng` | Newton-Schulz iteration with per-step optimized coefficients |
 | `svd-exact` | Exact SVD polar decomposition |
-| `polarexpress` | PolarExpress |
+| `polarexpress` | [PolarExpress](https://arxiv.org/abs/2505.16932) |
 
 Non-matrix parameters (embeddings, biases, LM head) are updated with AdamW.
 
