@@ -1,6 +1,6 @@
 # MuonPlus
 
-**MuonPlus** extends the [Muon optimizer](https://github.com/KellerJordan/Muon) by adding optional post-polar normalization to the update matrix. After polar factorization, each weight update can be column-wise, row-wise, or jointly normalized.
+**MuonPlus** extends the [Muon optimizer](https://github.com/KellerJordan/Muon) by adding optional post-polar normalization to the update matrix. After polar factorization, each weight update can be column-wise, row-wise, or jointly normalized. Check our paper here [Muon+](https://arxiv.org/abs/2602.21545).
 
 ## Method
 
